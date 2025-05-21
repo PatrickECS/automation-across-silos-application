@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: false
 
-  module_defaults:
+  vars:
     redhat.openshift.openshift:
       host: https://api.demo.ocp.tm.gmias:6443
  
