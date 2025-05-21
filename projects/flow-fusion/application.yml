@@ -2,11 +2,12 @@
 - name: Project Flow Fusion - Application Deployment
   hosts: localhost
   gather_facts: false
+  collections:
+    - redhat.openshift
 
   vars:
-    redhat.openshift.openshift:
-      host: https://api.demo.ocp.tm.gmias:6443
- 
+    api_url: "https://api.demo.ocp.tm.gmias:6443"
+    
   tasks:
     - name: Authenticate to OpenShift cluster and get a list of all pods from any namespace
       block:
