@@ -1,0 +1,6 @@
+---
+- name: Project Flow Fusion - Application Deployment
+  hosts: localhost
+  gather_facts: false
+
+  tasks: []
