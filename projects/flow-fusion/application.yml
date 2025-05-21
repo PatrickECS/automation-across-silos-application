@@ -3,22 +3,10 @@
   hosts: localhost
   gather_facts: false
 
-  tasks:
-    - name: Create an OCP project
-      redhat.openshift.k8s:
-        state: present
-        resource_definition:
-          apiVersion: project.openshift.io/v1
-          kind: Project
-          metadata:
-            name: testing
-
-
-- name: Example Playbook
-  hosts: localhost
   module_defaults:
     redhat.openshift.openshift:
       host: https://api.demo.ocp.tm.gmias:6443
+ 
   tasks:
     - name: Authenticate to OpenShift cluster and get a list of all pods from any namespace
       block:
