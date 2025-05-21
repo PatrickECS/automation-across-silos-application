@@ -57,3 +57,6 @@
                         value: "{{ db_password }}"
                       - name: MYSQL_DB
                         value: "{{ db_name }}"
+        host: "{{ api_url }}"
+        api_key: "{{ token }}"
+        validate_certs: no
