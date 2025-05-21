@@ -31,20 +31,20 @@
           apiVersion: apps/v1
           kind: Deployment
           metadata:
-            name: todo-app
-            namespace: demo-projekt
+            name: "{{ project_code_name }}-app"
+            namespace: "{{ project_code_name }}"
           spec:
             replicas: 1
             selector:
               matchLabels:
-                app: todo-app
+                app: "{{ project_code_name }}-app"
             template:
               metadata:
                 labels:
-                  app: todo-app
+                  app: "{{ project_code_name }}-app"
               spec:
                 containers:
-                  - name: todo-app
+                  - name: "{{ project_code_name }}-app"
                     image: arwthomasm/todo-app:latest
                     ports:
                       - containerPort: 8080
