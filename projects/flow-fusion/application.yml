@@ -7,7 +7,7 @@
 
   vars:
     project_code_name: flow-fusion
-    project_state: present
+    project_state: absent
     api_url: "https://api.demo.ocp.tm.gmias:6443"
     
   tasks:
@@ -16,7 +16,7 @@
         api_version: project.openshift.io/v1
         kind: Project
         name: "{{ project_code_name }}"
-        state: present
+        state: "{{ project_state }}"
         host: "{{ api_url }}"
         api_key: "{{ token }}"
         validate_certs: no
