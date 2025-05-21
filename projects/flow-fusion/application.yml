@@ -60,3 +60,44 @@
         host: "{{ api_url }}"
         api_key: "{{ token }}"
         validate_certs: no
+
+    - name: Create Service for todo-app
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: "{{ project_code_name }}-service"
+            namespace: "{{ project_code_name }}"
+          spec:
+            selector:
+              app: "{{ project_code_name }}-app"
+            ports:
+              - protocol: TCP
+                port: 3000        # Exposed Port
+                targetPort: 3000  # Port in the Pod
+        host: "{{ api_url }}"
+        api_key: "{{ token }}"
+        validate_certs: no  
+
+    - name: Create Route for todo-app
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: route.openshift.io/v1
+          kind: Route
+          metadata:
+            name: "{{ project_code_name }}-route"
+            namespace: "{{ project_code_name }}"
+          spec:
+            to:
+              kind: Service
+              name: "{{ project_code_name }}-service"
+            port:
+              targetPort: 3000
+            tls:
+              termination: edge
+        host: "{{ api_url }}"
+        api_key: "{{ token }}"
+        validate_certs: no
