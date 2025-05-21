@@ -7,16 +7,18 @@
 
   vars:
     project_code_name: flow-fusion
-    project_state: absent
+    project_state: present
     api_url: "https://api.demo.ocp.tm.gmias:6443"
     
   tasks:
-    - name: Create a project
+    - name: Create a namespace for the project
       k8s:
         api_version: project.openshift.io/v1
-        kind: Project
+        kind: Namespace
         name: "{{ project_code_name }}"
         state: "{{ project_state }}"
         host: "{{ api_url }}"
         api_key: "{{ token }}"
         validate_certs: no
+
+    
