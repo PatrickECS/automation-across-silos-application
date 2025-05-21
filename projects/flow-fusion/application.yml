@@ -9,6 +9,9 @@
     project_code_name: flow-fusion
     project_state: present
     api_url: "https://api.demo.ocp.tm.gmias:6443"
+    db_name: flow_fusion
+    db_user: flow_fusion_user
+    db_password: redhat
     
   tasks:
     - name: Create a namespace for the project
@@ -21,3 +24,36 @@
         api_key: "{{ token }}"
         validate_certs: no
 
+    - name: Deployment erstellen
+      k8s:
+        state: "{{ project_state }}"
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: todo-app
+            namespace: demo-projekt
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: todo-app
+            template:
+              metadata:
+                labels:
+                  app: todo-app
+              spec:
+                containers:
+                  - name: todo-app
+                    image: arwthomasm/todo-app:latest
+                    ports:
+                      - containerPort: 8080
+                    env:
+                      - name: MYSQL_HOST
+                        value: "172.27.55.221"
+                      - name: MYSQL_USER
+                        value: "{{ db_user }}"
+                      - name: MYSQL_PASSWORD
+                        value: "{{ db_password }}"
+                      - name: MYSQL_DB
+                        value: "{{ db_name }}"
