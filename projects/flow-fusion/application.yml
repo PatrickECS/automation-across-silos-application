@@ -13,7 +13,7 @@
   tasks:
     - name: Create a namespace for the project
       k8s:
-        api_version: project.openshift.io/v1
+        api_version: v1
         kind: Namespace
         name: "{{ project_code_name }}"
         state: "{{ project_state }}"
@@ -21,4 +21,3 @@
         api_key: "{{ token }}"
         validate_certs: no
 
-    
