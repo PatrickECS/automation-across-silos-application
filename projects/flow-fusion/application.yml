@@ -8,23 +8,16 @@
   vars:
     project_code_name: flow-fusion
     project_state: present
-    #api_url: "https://api.demo.ocp.tm.gmias:6443"
+
     api_url: "{{ lookup('env', 'K8S_AUTH_HOST') }}"
     token: "{{ lookup('env', 'K8S_AUTH_API_KEY') }}"
     validate_certs: "{{ lookup('env', 'K8S_AUTH_VERIFY_SSL') }}"
+
     db_name: flow_fusion
     db_user: flow_fusion_user
     db_password: redhat
     
   tasks:
-
-    - name: debug url
-      debug:
-        var: api_url
-
-    - name: debug token
-      debug:
-        var: token
 
     - name: Manage the namespace for the project
       k8s:
