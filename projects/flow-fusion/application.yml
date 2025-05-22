@@ -9,8 +9,9 @@
     project_code_name: flow-fusion
     project_state: present
     #api_url: "https://api.demo.ocp.tm.gmias:6443"
-    api_url: "{{ host }}"
-    token: "{{ api_key }}"
+    api_url: "{{ lookup('env', 'K8S_AUTH_HOST') }}"
+    token: "{{ lookup('env', 'K8S_AUTH_API_KEY') }}"
+    validate_certs: "{{ lookup('env', 'K8S_AUTH_VERIFY_SSL') }}"
     db_name: flow_fusion
     db_user: flow_fusion_user
     db_password: redhat
@@ -33,7 +34,7 @@
         state: "{{ project_state }}"
         host: "{{ api_url }}"
         api_key: "{{ token }}"
-        validate_certs: no
+        validate_certs: "{{ validate_certs }}"
 
     - name: Deploy the Application
       block:
@@ -73,7 +74,7 @@
                             value: "{{ db_name }}"
             host: "{{ api_url }}"
             api_key: "{{ token }}"
-            validate_certs: no
+            validate_certs: "{{ validate_certs }}"
 
         - name: Create Service for todo-app
           kubernetes.core.k8s:
@@ -93,7 +94,7 @@
                     targetPort: 3000  # Port in the Pod
             host: "{{ api_url }}"
             api_key: "{{ token }}"
-            validate_certs: no  
+            validate_certs: "{{ validate_certs }}"  
 
         - name: Create Route for todo-app
           kubernetes.core.k8s:
@@ -114,5 +115,5 @@
                   termination: edge
             host: "{{ api_url }}"
             api_key: "{{ token }}"
-            validate_certs: no
+            validate_certs: "{{ validate_certs }}"
       when: project_state == 'present'
