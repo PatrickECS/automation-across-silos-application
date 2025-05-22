@@ -1,0 +1,10 @@
+- name: test vault
+  hosts: localhost
+  gather_facts: false
+
+  vars_files: vault.yml
+
+  tasks:
+
+    - name: debug
+      var: test-vault-var
