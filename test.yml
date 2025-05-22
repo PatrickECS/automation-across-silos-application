@@ -9,4 +9,4 @@
 
     - name: debug
       debug:
-        var: test-vault-var
+        var: test_vault_var
