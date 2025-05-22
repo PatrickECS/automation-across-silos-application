@@ -5,6 +5,9 @@
   collections:
     - redhat.openshift
 
+  vars_files:
+    - vaults/database.yml
+
   vars:
     project_code_name: flow-fusion
     project_state: present
@@ -12,10 +15,6 @@
     api_url: "{{ lookup('env', 'K8S_AUTH_HOST') }}"
     token: "{{ lookup('env', 'K8S_AUTH_API_KEY') }}"
     validate_certs: "{{ lookup('env', 'K8S_AUTH_VERIFY_SSL') }}"
-
-    db_name: flow_fusion
-    db_user: flow_fusion_user
-    db_password: redhat
     
   tasks:
 
