@@ -22,7 +22,7 @@
       k8s:
         api_version: v1
         kind: Namespace
-        name: "{{ project_code_name }}"
+        name: "{{ project_code_name }}-{{ deploy_env }}"
         state: "{{ project_state }}"
         host: "{{ api_url }}"
         api_key: "{{ token }}"
@@ -39,7 +39,7 @@
               kind: Deployment
               metadata:
                 name: "{{ project_code_name }}-app"
-                namespace: "{{ project_code_name }}"
+                namespace: "{{ project_code_name }}-{{ deploy_env }}"
               spec:
                 replicas: 1
                 selector:
@@ -76,7 +76,7 @@
               kind: Service
               metadata:
                 name: "{{ project_code_name }}-service"
-                namespace: "{{ project_code_name }}"
+                namespace: "{{ project_code_name }}-{{ deploy_env }}"
               spec:
                 selector:
                   app: "{{ project_code_name }}-app"
@@ -96,7 +96,7 @@
               kind: Route
               metadata:
                 name: "{{ project_code_name }}-route"
-                namespace: "{{ project_code_name }}"
+                namespace: "{{ project_code_name }}-{{ deploy_env }}"
               spec:
                 to:
                   kind: Service
