@@ -7,4 +7,5 @@
   tasks:
 
     - name: debug
-      var: test-vault-var
+      debug:
+        var: test-vault-var
