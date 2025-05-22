@@ -1,0 +1,4 @@
+---
+- name: Import Flow-Fusion Project Playbooks - Application
+  import_playbook: projects/flow-fusion/application.yml
+ 

@@ -1,0 +1,111 @@
+---
+- name: Project Flow Fusion - Application Deployment
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - redhat.openshift
+
+  vars_files:
+    - ../../vaults/database.yml
+
+  vars:
+    project_code_name: flow-fusion
+    project_state: present
+
+    api_url: "{{ lookup('env', 'K8S_AUTH_HOST') }}"
+    token: "{{ lookup('env', 'K8S_AUTH_API_KEY') }}"
+    validate_certs: "{{ lookup('env', 'K8S_AUTH_VERIFY_SSL') }}"
+    
+  tasks:
+
+    - name: Manage the namespace for the project
+      k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ project_code_name }}-{{ deploy_env }}"
+        state: "{{ project_state }}"
+        host: "{{ api_url }}"
+        api_key: "{{ token }}"
+        validate_certs: "{{ validate_certs }}"
+
+    - name: Deploy the Application
+      block:
+
+        - name: Deployment erstellen
+          k8s:
+            state: "present"
+            definition:
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: "{{ project_code_name }}-app"
+                namespace: "{{ project_code_name }}-{{ deploy_env }}"
+              spec:
+                replicas: 1
+                selector:
+                  matchLabels:
+                    app: "{{ project_code_name }}-app"
+                template:
+                  metadata:
+                    labels:
+                      app: "{{ project_code_name }}-app"
+                  spec:
+                    containers:
+                      - name: "{{ project_code_name }}-app"
+                        image: arwthomasm/todo-app:latest
+                        ports:
+                          - containerPort: 8080
+                        env:
+                          - name: MYSQL_HOST
+                            value: "172.27.55.221"
+                          - name: MYSQL_USER
+                            value: "{{ db_user }}"
+                          - name: MYSQL_PASSWORD
+                            value: "{{ db_password }}"
+                          - name: MYSQL_DB
+                            value: "{{ db_name }}"
+            host: "{{ api_url }}"
+            api_key: "{{ token }}"
+            validate_certs: "{{ validate_certs }}"
+
+        - name: Create Service for todo-app
+          kubernetes.core.k8s:
+            state: present
+            definition:
+              apiVersion: v1
+              kind: Service
+              metadata:
+                name: "{{ project_code_name }}-service"
+                namespace: "{{ project_code_name }}-{{ deploy_env }}"
+              spec:
+                selector:
+                  app: "{{ project_code_name }}-app"
+                ports:
+                  - protocol: TCP
+                    port: 3000        # Exposed Port
+                    targetPort: 3000  # Port in the Pod
+            host: "{{ api_url }}"
+            api_key: "{{ token }}"
+            validate_certs: "{{ validate_certs }}"  
+
+        - name: Create Route for todo-app
+          kubernetes.core.k8s:
+            state: present
+            definition:
+              apiVersion: route.openshift.io/v1
+              kind: Route
+              metadata:
+                name: "{{ project_code_name }}-route"
+                namespace: "{{ project_code_name }}-{{ deploy_env }}"
+              spec:
+                to:
+                  kind: Service
+                  name: "{{ project_code_name }}-service"
+                port:
+                  targetPort: 3000
+                tls:
+                  termination: edge
+            host: "{{ api_url }}"
+            api_key: "{{ token }}"
+            validate_certs: "{{ validate_certs }}"
+      when: project_state == 'present'
