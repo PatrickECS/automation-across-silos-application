@@ -16,6 +16,15 @@
     db_password: redhat
     
   tasks:
+
+    - name: debug url
+      debug:
+        var: api_url
+
+    - name: debug token
+      debug:
+        var: token
+
     - name: Manage the namespace for the project
       k8s:
         api_version: v1
