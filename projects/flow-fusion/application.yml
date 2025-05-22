@@ -25,7 +25,8 @@
         validate_certs: no
 
     - name: Deploy the Application
-      ansible.builtin.block:
+      block:
+      
         - name: Deployment erstellen
           k8s:
             state: "present"
