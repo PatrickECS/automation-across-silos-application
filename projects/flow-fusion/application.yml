@@ -6,7 +6,7 @@
     - redhat.openshift
 
   vars_files:
-    - vaults/database.yml
+    - ../../vaults/database.yml
 
   vars:
     project_code_name: flow-fusion
