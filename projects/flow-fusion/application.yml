@@ -57,13 +57,13 @@
                           - containerPort: 8080
                         env:
                           - name: MYSQL_HOST
-                            value: "172.27.55.221"
+                            value: "{{ db_data[deploy_env]['db_host'] }}"
                           - name: MYSQL_USER
-                            value: "{{ db_user }}"
+                            value: "{{ db_data[deploy_env]['db_user'] }}"
                           - name: MYSQL_PASSWORD
-                            value: "{{ db_password }}"
+                            value: "{{ db_data[deploy_env]['db_password'] }}"
                           - name: MYSQL_DB
-                            value: "{{ db_name }}"
+                            value: "{{ db_data[deploy_env]['db_name'] }}"
             host: "{{ api_url }}"
             api_key: "{{ token }}"
             validate_certs: "{{ validate_certs }}"
